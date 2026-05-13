@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects - these handle same-domain path redirects only
+# For cross-domain redirect (pages.dev -> wordleanalyzer.dev), use Cloudflare Bulk Redirects API
+
+# Ensure www redirects to apex
+https://www.wordleanalyzer.dev/* https://wordleanalyzer.dev/:splat 301!

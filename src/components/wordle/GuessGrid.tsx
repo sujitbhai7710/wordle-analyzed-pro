@@ -21,7 +21,7 @@ export function GuessGrid({
   onCellClick,
 }: GuessGridProps) {
   return (
-    <div className="flex flex-col items-center gap-1 sm:gap-[5px]" role="grid" aria-label="Wordle guess grid">
+    <div className="flex flex-col items-center gap-[5px] sm:gap-[6px]" role="grid" aria-label="Wordle guess grid">
       {Array.from({ length: MAX_ROWS }, (_, rowIndex) => {
         const rowValue = guessInputs[rowIndex] || '';
         const isFocused = rowIndex === focusedRow;
@@ -33,7 +33,7 @@ export function GuessGrid({
         return (
           <div
             key={rowIndex}
-            className={`flex gap-1 sm:gap-[5px] transition-opacity ${isDisabled ? 'opacity-30' : 'opacity-100'}`}
+            className={`flex gap-[3px] sm:gap-1 transition-opacity ${isDisabled ? 'opacity-30' : 'opacity-100'}`}
             role="row"
           >
             {Array.from({ length: WORD_LENGTH }, (_, colIndex) => {

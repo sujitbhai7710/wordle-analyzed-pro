@@ -48,7 +48,7 @@ export function WordleAnalyzerPage({ recentPosts, faqItems }: WordleAnalyzerPage
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="max-w-md sm:max-w-xl mx-auto"
+            className="max-w-4xl mx-auto"
           >
             <WordleAnalyzer />
           </motion.div>

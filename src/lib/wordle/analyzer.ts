@@ -247,7 +247,60 @@ export function getStrategyLabel(strategy: AIStrategy): string {
 }
 
 /**
+ * Compute Shannon entropy for a candidate guess across all remaining words.
+ * For each possible answer, simulate the clue pattern, group by pattern (bucket),
+ * and compute the expected information gain.
+ * Inspired by the wordlebot calculateAverageBucketSize approach.
+ */
+function computeEntropy(candidate: string, remainingWords: string[]): number {
+  const clueGroups = new Map<string, number>();
+
+  // Full sweep across ALL remaining words (no sampling)
+  for (let i = 0; i < remainingWords.length; i++) {
+    const testAnswer = remainingWords[i];
+    const testClue = generateClue(candidate, testAnswer);
+    const key = testClue.map((c) => `${c.letter}${c.color}`).join('');
+    clueGroups.set(key, (clueGroups.get(key) || 0) + 1);
+  }
+
+  // Shannon entropy: -sum(p * log2(p))
+  let entropy = 0;
+  const total = remainingWords.length;
+  clueGroups.forEach((count) => {
+    const p = count / total;
+    if (p > 0) entropy -= p * Math.log2(p);
+  });
+
+  return entropy;
+}
+
+/**
+ * Compute the worst-case bucket size for a candidate (minimax metric).
+ * For each possible answer, simulate the clue pattern, group by pattern,
+ * and return the maximum bucket size.
+ */
+function computeWorstCaseBucket(candidate: string, remainingWords: string[]): number {
+  const clueGroups = new Map<string, number>();
+
+  for (let i = 0; i < remainingWords.length; i++) {
+    const testAnswer = remainingWords[i];
+    const testClue = generateClue(candidate, testAnswer);
+    const key = testClue.map((c) => `${c.letter}${c.color}`).join('');
+    clueGroups.set(key, (clueGroups.get(key) || 0) + 1);
+  }
+
+  let worstCase = 0;
+  clueGroups.forEach((count) => {
+    worstCase = Math.max(worstCase, count);
+  });
+
+  return worstCase;
+}
+
+/**
  * Find the optimal next guess using entropy maximization.
+ * Rewritten to use full entropy calculation across all remaining words
+ * with a much broader candidate search, inspired by wordlebot.
  */
 export function getBestPlay(
   remainingWords: string[],
@@ -257,39 +310,66 @@ export function getBestPlay(
   if (remainingWords.length === 1) {
     return { word: remainingWords[0], strategy: LIKELY_SET.has(remainingWords[0]) ? 'play_likely' : 'play_unlikely' };
   }
+  if (remainingWords.length === 2) {
+    // Just pick the first remaining word — both are equally good candidates
+    return { word: remainingWords[0], strategy: LIKELY_SET.has(remainingWords[0]) ? 'play_likely' : 'play_unlikely' };
+  }
 
   const remainingLikely = remainingWords.filter(w => LIKELY_SET.has(w)).length;
-  let bestWord = remainingWords[0];
-  let bestScore = -1;
+  const remainingUpper = new Set(remainingWords.map(w => w.toUpperCase()));
 
+  // Build candidate pool based on remaining count
   const candidates = new Set<string>();
   remainingWords.forEach((w) => candidates.add(w.toUpperCase()));
 
-  const topStarters = ['SOARE', 'SLATE', 'CRANE', 'SALET', 'TRACE', 'RAISE', 'STARE', 'CRATE', 'IRATE', 'ARISE'];
-  topStarters.forEach((w) => candidates.add(w));
-
-  const candidateArray = Array.from(candidates).slice(0, 30);
-
-  for (const candidate of candidateArray) {
-    const clueGroups = new Map<string, number>();
-    const sampleSize = Math.min(remainingWords.length, 50);
-    const step = Math.max(1, Math.floor(remainingWords.length / sampleSize));
-
-    for (let i = 0; i < remainingWords.length; i += step) {
-      const testAnswer = remainingWords[i];
-      const testClue = generateClue(candidate, testAnswer);
-      const key = testClue.map((c) => `${c.letter}${c.color}`).join('');
-      clueGroups.set(key, (clueGroups.get(key) || 0) + 1);
+  if (remainingWords.length <= 10) {
+    // Only check remaining words when very few remain
+    // No need for elimination words
+  } else {
+    // Add top elimination candidates from ALL_VALID_WORDS
+    // Pick words with high letter diversity that aren't already candidates
+    const eliminationCandidates: { word: string; score: number }[] = [];
+    const remainingLetterFreqs: Record<string, number> = {};
+    for (const word of remainingWords) {
+      for (const letter of new Set(word.toUpperCase().split(''))) {
+        remainingLetterFreqs[letter] = (remainingLetterFreqs[letter] || 0) + 1;
+      }
     }
 
-    let score = 0;
-    const total = Math.ceil(remainingWords.length / step);
-    clueGroups.forEach((count) => {
-      const p = count / total;
-      if (p > 0) score -= p * Math.log2(p);
-    });
+    for (const word of allWords) {
+      const upper = word.toUpperCase();
+      if (remainingUpper.has(upper)) continue;
+      // Score by how many unique letters the word has that appear in remaining words
+      const uniqueLetters = new Set(upper.split(''));
+      let score = 0;
+      uniqueLetters.forEach(l => {
+        score += remainingLetterFreqs[l] || 0;
+      });
+      eliminationCandidates.push({ word: upper, score });
+    }
 
-    if (remainingWords.includes(candidate.toUpperCase())) score += 0.05;
+    // Sort by score and take top elimination candidates
+    eliminationCandidates.sort((a, b) => b.score - a.score);
+    const maxElimination = Math.min(200 - remainingWords.length, eliminationCandidates.length);
+    for (let i = 0; i < maxElimination; i++) {
+      candidates.add(eliminationCandidates[i].word);
+    }
+  }
+
+  const candidateArray = Array.from(candidates);
+
+  // Compute full entropy for each candidate
+  let bestWord = remainingWords[0];
+  let bestScore = -Infinity;
+
+  for (const candidate of candidateArray) {
+    let score = computeEntropy(candidate, remainingWords);
+
+    // Give a bonus to candidates that are themselves possible answers
+    // This ensures we prefer guesses that could actually be the answer
+    if (remainingUpper.has(candidate.toUpperCase())) {
+      score += 0.1;
+    }
 
     if (score > bestScore) {
       bestScore = score;
@@ -609,6 +689,18 @@ function identifyPillarsOfDoom(turns: TurnAnalysis[]): PillarOfDoom[] {
 }
 
 /**
+ * Helper: compute totalGuesses and solved from a playthrough's turns array.
+ * The turns array includes the final correct guess if found.
+ * If solved: totalGuesses = number of turns (the correct guess is the last turn).
+ * If not solved: totalGuesses = 6 (ran out of guesses).
+ */
+function computeSolverResult(turns: AIPlayTurn[], answerUpper: string): { totalGuesses: number; solved: boolean } {
+  const solved = turns.some(t => t.guess.toUpperCase() === answerUpper);
+  const totalGuesses = solved ? turns.length : 6;
+  return { totalGuesses, solved };
+}
+
+/**
  * Multi-method solver comparison
  */
 function runSolverComparison(
@@ -620,62 +712,57 @@ function runSolverComparison(
 
   // Method 1: Entropy Maximizer (current AI)
   const entropyTurns = simulateAIPlaythrough(answer, hardMode, 'entropy');
+  const entropyResult = computeSolverResult(entropyTurns, answerUpper);
   methods.push({
     name: 'Entropy Maximizer',
     description: 'Maximizes expected information gain each turn. The gold standard algorithm.',
     turns: entropyTurns,
-    totalGuesses: entropyTurns.filter(t => t.guess.toUpperCase() === answerUpper).length > 0
-      ? entropyTurns.findIndex(t => t.guess.toUpperCase() === answerUpper) + 1
-      : entropyTurns.length,
-    solved: entropyTurns.some(t => t.guess.toUpperCase() === answerUpper),
+    totalGuesses: entropyResult.totalGuesses,
+    solved: entropyResult.solved,
   });
 
   // Method 2: Letter Frequency Optimizer
   const freqTurns = simulateAIPlaythrough(answer, hardMode, 'frequency');
+  const freqResult = computeSolverResult(freqTurns, answerUpper);
   methods.push({
     name: 'Letter Frequency',
     description: 'Prioritizes testing the most common letters first. Simple but effective.',
     turns: freqTurns,
-    totalGuesses: freqTurns.filter(t => t.guess.toUpperCase() === answerUpper).length > 0
-      ? freqTurns.findIndex(t => t.guess.toUpperCase() === answerUpper) + 1
-      : freqTurns.length,
-    solved: freqTurns.some(t => t.guess.toUpperCase() === answerUpper),
+    totalGuesses: freqResult.totalGuesses,
+    solved: freqResult.solved,
   });
 
   // Method 3: Random from Remaining
   const randomTurns = simulateAIPlaythrough(answer, hardMode, 'random');
+  const randomResult = computeSolverResult(randomTurns, answerUpper);
   methods.push({
     name: 'Random Baseline',
     description: 'Picks a random word from remaining possibilities. Shows the floor of performance.',
     turns: randomTurns,
-    totalGuesses: randomTurns.filter(t => t.guess.toUpperCase() === answerUpper).length > 0
-      ? randomTurns.findIndex(t => t.guess.toUpperCase() === answerUpper) + 1
-      : randomTurns.length,
-    solved: randomTurns.some(t => t.guess.toUpperCase() === answerUpper),
+    totalGuesses: randomResult.totalGuesses,
+    solved: randomResult.solved,
   });
 
   // Method 4: First-possible Strategy
   const firstPossibleTurns = simulateAIPlaythrough(answer, hardMode, 'first_possible');
+  const fpResult = computeSolverResult(firstPossibleTurns, answerUpper);
   methods.push({
     name: 'First Possible',
     description: 'Always guesses the first alphabetically from remaining possible answers. Naive but deterministic.',
     turns: firstPossibleTurns,
-    totalGuesses: firstPossibleTurns.filter(t => t.guess.toUpperCase() === answerUpper).length > 0
-      ? firstPossibleTurns.findIndex(t => t.guess.toUpperCase() === answerUpper) + 1
-      : firstPossibleTurns.length,
-    solved: firstPossibleTurns.some(t => t.guess.toUpperCase() === answerUpper),
+    totalGuesses: fpResult.totalGuesses,
+    solved: fpResult.solved,
   });
 
   // Method 5: Minimax Strategy
   const minimaxTurns = simulateAIPlaythrough(answer, hardMode, 'minimax');
+  const mmResult = computeSolverResult(minimaxTurns, answerUpper);
   methods.push({
     name: 'Minimax',
     description: 'Minimizes the worst-case scenario. Plays it safe by ensuring no outcome is too bad.',
     turns: minimaxTurns,
-    totalGuesses: minimaxTurns.filter(t => t.guess.toUpperCase() === answerUpper).length > 0
-      ? minimaxTurns.findIndex(t => t.guess.toUpperCase() === answerUpper) + 1
-      : minimaxTurns.length,
-    solved: minimaxTurns.some(t => t.guess.toUpperCase() === answerUpper),
+    totalGuesses: mmResult.totalGuesses,
+    solved: mmResult.solved,
   });
 
   return methods;
@@ -701,6 +788,7 @@ function simulateAIPlaythrough(
     return seed / 0x7fffffff;
   };
 
+  // Limit to 6 guesses (Wordle rules)
   for (let i = 0; i < 6; i++) {
     const remainingLikely = currentLikely.filter(w => LIKELY_SET.has(w)).length;
     let aiGuess: string;
@@ -714,16 +802,39 @@ function simulateAIPlaythrough(
     } else {
       switch (strategy) {
         case 'frequency': {
-          // Score by letter frequency coverage
+          // Score by letter frequency coverage of untested letters
+          // Compute letter frequencies across remaining words
           const letterFreqs: Record<string, number> = {};
           for (const word of currentLikely) {
             for (const letter of new Set(word.toUpperCase().split(''))) {
               letterFreqs[letter] = (letterFreqs[letter] || 0) + 1;
             }
           }
-          let bestFreqWord = currentLikely[0];
+
+          // Build candidate pool: remaining words + elimination words from ALL_VALID_WORDS
+          const candidatePool = [...currentLikely];
+          const candidatePoolUpper = new Set(currentLikely.map(c => c.toUpperCase()));
+          if (currentLikely.length > 10) {
+            // Add elimination words that cover many untested letters
+            const scoredElimination: { word: string; score: number }[] = [];
+            for (const word of ALL_VALID_WORDS) {
+              const upper = word.toUpperCase();
+              if (candidatePoolUpper.has(upper)) continue;
+              const uniqueLetters = new Set(upper.split(''));
+              let score = 0;
+              uniqueLetters.forEach(l => {
+                score += letterFreqs[l] || 0;
+              });
+              scoredElimination.push({ word: upper, score });
+            }
+            scoredElimination.sort((a, b) => b.score - a.score);
+            const topElim = scoredElimination.slice(0, 100);
+            candidatePool.push(...topElim.map(e => e.word));
+          }
+
+          let bestFreqWord = candidatePool[0];
           let bestFreqScore = -1;
-          for (const word of currentLikely.slice(0, 50)) {
+          for (const word of candidatePool.slice(0, 200)) {
             const score = Array.from(new Set(word.toUpperCase().split(''))).reduce((s, l) => s + (letterFreqs[l] || 0), 0);
             if (score > bestFreqScore) { bestFreqScore = score; bestFreqWord = word; }
           }
@@ -732,33 +843,41 @@ function simulateAIPlaythrough(
           break;
         }
         case 'random': {
+          // Pure random from remaining words — no elimination words
           const idx = Math.floor(pseudoRandom() * currentLikely.length);
           aiGuess = currentLikely[idx];
           aiStrategy = getAIStrategy(aiGuess, currentLikely, remainingLikely);
           break;
         }
         case 'first_possible': {
+          // Always pick the first alphabetically sorted word from remaining possible answers
+          // This is a pure naive strategy — no entropy, no elimination
           const sorted = [...currentLikely].sort();
           aiGuess = sorted[0];
           aiStrategy = getAIStrategy(aiGuess, currentLikely, remainingLikely);
           break;
         }
         case 'minimax': {
-          // Minimize worst-case remaining
+          // Minimize worst-case remaining bucket size
+          // Use full search across all remaining words (no sampling)
+          const remainingUpper = new Set(currentLikely.map(w => w.toUpperCase()));
+
+          // Build candidate pool: remaining words + some elimination words
+          const minimaxCandidates = [...currentLikely];
+          if (currentLikely.length > 10) {
+            const eliminationWords = ALL_VALID_WORDS.filter(w => !remainingUpper.has(w.toUpperCase())).slice(0, 50);
+            minimaxCandidates.push(...eliminationWords);
+          }
+
           let bestMinimaxWord = currentLikely[0];
           let bestWorstCase = Infinity;
-          const candidates = currentLikely.slice(0, 30);
-          for (const candidate of candidates) {
-            let worstCase = 0;
-            const sampleSize = Math.min(currentLikely.length, 30);
-            const step = Math.max(1, Math.floor(currentLikely.length / sampleSize));
-            for (let j = 0; j < currentLikely.length; j += step) {
-              const testClue = generateClue(candidate, currentLikely[j]);
-              const testRemaining = getRemainingWords(candidate, testClue, currentLikely);
-              worstCase = Math.max(worstCase, testRemaining.length);
-            }
-            if (worstCase < bestWorstCase) {
-              bestWorstCase = worstCase;
+
+          for (const candidate of minimaxCandidates.slice(0, 200)) {
+            const worstCase = computeWorstCaseBucket(candidate, currentLikely);
+            // Tiebreak: prefer candidates that are possible answers
+            const adjustedWorstCase = worstCase + (remainingUpper.has(candidate.toUpperCase()) ? 0 : 0.5);
+            if (adjustedWorstCase < bestWorstCase) {
+              bestWorstCase = adjustedWorstCase;
               bestMinimaxWord = candidate;
             }
           }
@@ -767,8 +886,8 @@ function simulateAIPlaythrough(
           break;
         }
         default: {
-          // entropy (default)
-          const result = getBestPlay(currentLikely, currentLikely);
+          // entropy (default) - use improved getBestPlay with full entropy calculation
+          const result = getBestPlay(currentLikely, ALL_VALID_WORDS);
           aiGuess = result.word;
           aiStrategy = result.strategy;
         }
@@ -801,7 +920,27 @@ function simulateAIPlaythrough(
     currentLikely = newLikely;
 
     if (aiGuess.toUpperCase() === answer.toUpperCase()) break;
-    if (newLikely.length <= 1) break;
+    // If only 1 word remaining, the solver would guess it next turn — add that final turn
+    if (newLikely.length === 1 && turns.length < 6) {
+      const finalGuess = newLikely[0];
+      const finalClue = generateClue(finalGuess, answer);
+      const finalGuessQuality = 100; // Only 1 word left, guaranteed correct
+      turns.push({
+        guess: finalGuess,
+        clue: finalClue,
+        strategy: LIKELY_SET.has(finalGuess) ? 'play_likely' : 'play_unlikely',
+        avgRemaining: 0,
+        avgLikelyRemaining: 0,
+        guessQuality: finalGuessQuality,
+        actualRemaining: 0,
+        actualLikelyRemaining: 0,
+        luck: { level: 'neutral' as LuckLevel, rating: 'neutral' as const, description: 'Only one word remaining.' },
+        isLikelyWord: LIKELY_SET.has(finalGuess),
+        remainingWords: [],
+      });
+      break;
+    }
+    if (newLikely.length === 0) break;
   }
 
   return turns;

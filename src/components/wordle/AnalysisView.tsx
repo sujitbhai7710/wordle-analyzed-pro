@@ -282,7 +282,7 @@ function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMetho
           <div className="flex items-center gap-2">
             <Swords className="h-5 w-5 text-purple-500" />
             <CardTitle className="text-base sm:text-lg">5-Method Solver Comparison</CardTitle>
-            <Badge className="bg-[#c9b458]/20 text-[#c9b458] border-[#c9b458]/30 text-[9px] font-bold">WASM</Badge>
+            <Badge className="bg-[#c9b458]/20 text-[#c9b458] border-[#c9b458]/30 text-[9px] font-bold">PRO</Badge>
           </div>
           {expanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </div>
@@ -315,7 +315,11 @@ function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMetho
                   <div className="text-[10px] text-muted-foreground">{method.description}</div>
                 </div>
                 <div className="text-lg font-bold">
-                  {method.solved ? `${method.totalGuesses}/6` : 'X/6'}
+                  {!method.solved ? (
+                    <span className="text-red-500">X/6</span>
+                  ) : (
+                    <span>{method.totalGuesses}/6</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -718,11 +722,15 @@ function ShareSection({ result, solvedIn }: { result: AnalysisResult; solvedIn: 
 // ============ MAIN ANALYSIS VIEW ============
 export function AnalysisView({ result, onNewAnalysis }: AnalysisViewProps) {
   const lastTurn = result.turns[result.turns.length - 1];
-  const totalGuesses = result.turns.length + 1;
-  const solvedInLastTurn = lastTurn && lastTurn.remainingAfter <= 1 ? totalGuesses : null;
+  const totalGuesses = result.totalGuesses || (result.turns.length + 1);
+  // Handle edge case: if turns is empty but the answer was found (e.g., guessed correctly on first try)
+  // Also handle normal case: if the last turn left <=1 remaining, the answer was found
+  const solvedInLastTurn = result.turns.length === 0
+    ? 1 // First guess was the answer
+    : (lastTurn && lastTurn.remainingAfter <= 1 ? result.turns.length + 1 : null);
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl sm:max-w-4xl mx-auto">
       {/* Summary */}
       <Card className="border-[#6aaa64]/30 bg-gradient-to-r from-[#6aaa64]/5 to-transparent">
         <CardContent className="pt-5 sm:pt-6 text-center px-4 sm:px-6">
@@ -825,7 +833,7 @@ export function AnalysisView({ result, onNewAnalysis }: AnalysisViewProps) {
       <AIPlaythroughSection playthrough={result.aiPlaythrough} />
 
       {/* Solver Comparison */}
-      <SolverComparisonCard methods={result.solverComparison} playerGuesses={solvedInLastTurn || 7} />
+      <SolverComparisonCard methods={result.solverComparison} playerGuesses={solvedInLastTurn || totalGuesses} />
 
       {/* Share */}
       <ShareSection result={result} solvedIn={solvedInLastTurn || 'X'} />

@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { analyzeGame, decodeGameState } from '@/lib/wordle/analyzer';
 import type { AnalysisResult } from '@/lib/wordle/types';
-import { Eraser, Search, Share2 } from 'lucide-react';
+import { Eraser, Search, Share2, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const MAX_ROWS = 7;
@@ -206,14 +206,14 @@ export function WordleAnalyzer() {
   const lastFilledRow = guessInputs.reduce((last, g, i) => (g.length > 0 ? i : last), -1);
 
   return (
-    <div className="space-y-4 w-full max-w-md sm:max-w-xl mx-auto">
+    <div className="space-y-4 w-full max-w-md sm:max-w-lg mx-auto">
       {/* Instruction */}
       <div className="text-center space-y-1 mb-2 px-2">
         <p className="text-xs sm:text-sm text-muted-foreground font-medium">
           Enter your guesses, then the answer in the last row
         </p>
         <p className="text-[10px] sm:text-xs text-muted-foreground">
-          Type 5-letter words &bull; The last row is the answer &bull; Auto-advances when row is complete
+          5-letter words &middot; Last row = answer &middot; Auto-advances on complete
         </p>
       </div>
 
@@ -254,8 +254,11 @@ export function WordleAnalyzer() {
               checked={hardMode}
               onCheckedChange={(checked) => setHardMode(checked === true)}
             />
-            <Label htmlFor="hardmode" className="text-xs sm:text-sm cursor-pointer">
+            <Label htmlFor="hardmode" className="text-xs sm:text-sm cursor-pointer flex items-center gap-1">
               Hard Mode
+              <span title="In Hard Mode, you must use revealed hints in subsequent guesses (greens must stay, yellows must be included).">
+                <Info className="h-3.5 w-3.5 text-muted-foreground" />
+              </span>
             </Label>
           </div>
 

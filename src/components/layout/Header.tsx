@@ -53,7 +53,7 @@ export function Header() {
               <div className="w-5 h-5 rounded bg-[#787c7e] flex items-center justify-center text-white text-[8px] font-bold">R</div>
             </div>
             <span className="text-lg font-bold tracking-tight">
-              Wordle <span className="text-[#6aaa64]">Analyzer</span>
+              Wordle <span className="text-[#6aaa64]">Analyzer</span> <span className="text-[#c9b458] font-extrabold text-sm">Pro</span>
             </span>
           </Link>
 

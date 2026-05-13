@@ -14,7 +14,7 @@ export function Footer() {
                 <div className="w-4 h-4 rounded bg-[#787c7e] flex items-center justify-center text-white text-[6px] font-bold">R</div>
               </div>
               <span className="text-sm font-bold tracking-tight">
-                Wordle <span className="text-[#6aaa64]">Analyzer</span>
+                Wordle <span className="text-[#6aaa64]">Analyzer</span> <span className="text-[#c9b458] font-extrabold text-xs">Pro</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
@@ -24,7 +24,7 @@ export function Footer() {
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#6aaa64]/10 text-[#6aaa64] font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#6aaa64]" aria-hidden="true" />
-                Trusted by 10,000+ players
+                Trusted by 25,000+ players · Now with Pro features
               </span>
             </div>
           </div>
@@ -33,7 +33,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold mb-4">Analysis Tools</h3>
             <ul className="space-y-2.5" role="list">
-              <li><Link href="/" className="text-sm text-muted-foreground hover:text-[#6aaa64] transition-colors">Wordle Analyzer</Link></li>
+              <li><Link href="/" className="text-sm text-muted-foreground hover:text-[#6aaa64] transition-colors">Wordle Analyzer Pro</Link></li>
               <li><Link href="/tools/best-words" className="text-sm text-muted-foreground hover:text-[#6aaa64] transition-colors">Best Starting Words</Link></li>
               <li><Link href="/tools/letter-frequency" className="text-sm text-muted-foreground hover:text-[#6aaa64] transition-colors">Letter Frequency Tool</Link></li>
             </ul>
@@ -93,7 +93,7 @@ export function Footer() {
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Wordle Analyzer. All rights reserved. Not affiliated with the New York Times or Wordle.
+            © {new Date().getFullYear()} Wordle Analyzer Pro. All rights reserved. Not affiliated with the New York Times or Wordle.
           </p>
           <p className="text-xs text-muted-foreground">
             Built with data-driven methodology · <Link href="/privacy" className="hover:text-[#6aaa64] transition-colors">Privacy</Link> · <Link href="/contact" className="hover:text-[#6aaa64] transition-colors">Contact</Link>

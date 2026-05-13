@@ -4,11 +4,11 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { blogPosts } from '@/lib/blog/posts';
 
 export const metadata: Metadata = {
-  title: 'Wordle Analyzer - Was It Luck or Genius? Analyze Your Wordle Gameplay',
+  title: 'Wordle Analyzer Pro - Skill & Luck Scoring, Difficulty Scorecard, Solver Comparison',
   description:
-    'Analyze your Wordle gameplay with data-driven insights. Discover your luck rating, guess quality, and AI-recommended optimal plays. Free Wordle analyzer tool trusted by 10,000+ players. All analysis runs locally in your browser.',
+    'Analyze your Wordle gameplay with Pro features: Skill & Luck scoring, Difficulty Scorecard, 5-Method Solver Comparison, Pillars of Doom analysis, and shareable results. Free Wordle analyzer tool trusted by 25,000+ players. All analysis runs locally in your browser.',
   alternates: {
-    canonical: 'https://wordleanalyzer.dev',
+    canonical: 'https://wordle-analyzed-pro.pages.dev',
   },
 };
 

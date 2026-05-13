@@ -469,8 +469,10 @@ function calculateSkillBreakdown(
   const luckScoreRaw = luckRatings.reduce((a, b) => a + b, 0) / luckRatings.length;
 
   // Weighted skill score (0-100)
+  // playerAvgQuality is 0-100, normalize to 0-1 for the formula
+  const playerAvgQualityNorm = playerAvgQuality / 100;
   const skillScore = Math.round(
-    playerAvgQuality * 30 +
+    playerAvgQualityNorm * 30 +
     efficiencyRaw * 25 +
     consistencyRaw * 20 +
     clueUtilizationRaw * 25
@@ -722,7 +724,7 @@ function simulateAIPlaythrough(
           let bestFreqWord = currentLikely[0];
           let bestFreqScore = -1;
           for (const word of currentLikely.slice(0, 50)) {
-            const score = new Set(word.toUpperCase().split('')).reduce((s, l) => s + (letterFreqs[l] || 0), 0);
+            const score = Array.from(new Set(word.toUpperCase().split(''))).reduce((s, l) => s + (letterFreqs[l] || 0), 0);
             if (score > bestFreqScore) { bestFreqScore = score; bestFreqWord = word; }
           }
           aiGuess = bestFreqWord;

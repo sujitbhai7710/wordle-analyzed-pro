@@ -206,7 +206,7 @@ export function WordleAnalyzer() {
   const lastFilledRow = guessInputs.reduce((last, g, i) => (g.length > 0 ? i : last), -1);
 
   return (
-    <div className="space-y-4 w-full max-w-lg mx-auto">
+    <div className="space-y-4 w-full max-w-md sm:max-w-xl mx-auto">
       {/* Instruction */}
       <div className="text-center space-y-1 mb-2 px-2">
         <p className="text-xs sm:text-sm text-muted-foreground font-medium">

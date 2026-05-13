@@ -45,3 +45,5 @@ agent-ctx/
 
 # dev log
 dev.log
+wasm-solver/target/
+wasm-solver/pkg/

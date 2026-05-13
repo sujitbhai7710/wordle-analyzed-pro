@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Copy, RotateCcw, Lightbulb, Bot, ChevronDown, ChevronUp, AlertTriangle, BarChart3, Zap, Target, Shield, Swords, Trophy, Share2, Link2, Eye, EyeOff, Gauge, Flame, Brain, TrendingUp, Sparkles } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface AnalysisViewProps {
   result: AnalysisResult;
@@ -282,6 +282,7 @@ function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMetho
           <div className="flex items-center gap-2">
             <Swords className="h-5 w-5 text-purple-500" />
             <CardTitle className="text-base sm:text-lg">5-Method Solver Comparison</CardTitle>
+            <Badge className="bg-[#c9b458]/20 text-[#c9b458] border-[#c9b458]/30 text-[9px] font-bold">WASM</Badge>
           </div>
           {expanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </div>
@@ -721,11 +722,11 @@ export function AnalysisView({ result, onNewAnalysis }: AnalysisViewProps) {
   const solvedInLastTurn = lastTurn && lastTurn.remainingAfter <= 1 ? totalGuesses : null;
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto">
       {/* Summary */}
       <Card className="border-[#6aaa64]/30 bg-gradient-to-r from-[#6aaa64]/5 to-transparent">
         <CardContent className="pt-5 sm:pt-6 text-center px-4 sm:px-6">
-          <h3 className="text-xl sm:text-2xl font-bold mb-1">Your play: {solvedInLastTurn || 'X'}/6</h3>
+          <h3 className="text-xl sm:text-2xl font-bold mb-1">Your play: {solvedInLastTurn || 'X'}/6 <Badge className="bg-[#c9b458] text-white text-xs font-bold ml-1">PRO</Badge></h3>
           <p className="text-sm sm:text-base text-muted-foreground">
             {solvedInLastTurn
               ? `Solved in ${solvedInLastTurn} guess${solvedInLastTurn > 1 ? 'es' : ''}!`

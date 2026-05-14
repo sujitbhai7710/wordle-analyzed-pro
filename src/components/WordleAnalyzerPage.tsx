@@ -32,14 +32,14 @@ export function WordleAnalyzerPage({ recentPosts, faqItems }: WordleAnalyzerPage
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-3">
               Wordle{' '}
               <span className="text-[#6aaa64]">Analyzer</span>{' '}
-              <span className="text-[#c9b458]">Pro</span>
+              
             </h1>
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
               Was it luck or genius? Analyze your Wordle gameplay with Skill & Luck scoring, Difficulty Scorecard, 5-Method Solver Comparison, and more
             </p>
             <p className="text-xs text-muted-foreground mt-2 flex items-center justify-center gap-1.5">
               <Calendar className="h-3 w-3" aria-hidden="true" />
-              Last updated: May 2026 · Trusted by 25,000+ players · Now with Pro features
+              Last updated: May 2026 · Trusted by 25,000+ players
             </p>
           </motion.div>
 

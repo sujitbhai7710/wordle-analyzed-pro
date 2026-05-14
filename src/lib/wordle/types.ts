@@ -127,6 +127,7 @@ export type AnalysisResult = {
   turns: TurnAnalysis[];
   aiPlaythrough: AIPlayTurn[];
   totalGuesses: number;
+  solved: boolean;
   hardMode: boolean;
   answer: string;
   /** NEW: Skill & Luck scoring */

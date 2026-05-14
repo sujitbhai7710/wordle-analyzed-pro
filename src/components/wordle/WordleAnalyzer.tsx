@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { analyzeGame, decodeGameState } from '@/lib/wordle/analyzer';
 import type { AnalysisResult } from '@/lib/wordle/types';
-import { Eraser, Search, Share2, Info } from 'lucide-react';
+import { Eraser, Search, Share2, Info, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const MAX_ROWS = 7;
@@ -20,6 +20,7 @@ export function WordleAnalyzer() {
   const [focusedRow, setFocusedRow] = useState(0);
   const [hardMode, setHardMode] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -43,6 +44,7 @@ export function WordleAnalyzer() {
           setGuessInputs(newInputs);
           setHardMode(decoded.hardMode);
           // Auto-analyze after a short delay
+          setIsAnalyzing(true);
           setTimeout(() => {
             const nonEmptyRows = newInputs.filter((g: string) => g.length === WORD_LENGTH);
             if (nonEmptyRows.length >= 2) {
@@ -54,7 +56,11 @@ export function WordleAnalyzer() {
                 setAnalyzed(true);
               } catch (err) {
                 // ignore
+              } finally {
+                setIsAnalyzing(false);
               }
+            } else {
+              setIsAnalyzing(false);
             }
           }, 300);
           // Clean URL
@@ -172,17 +178,23 @@ export function WordleAnalyzer() {
     const answer = nonEmptyRows[nonEmptyRows.length - 1];
     const guesses = nonEmptyRows.slice(0, -1);
 
-    try {
-      const analysisResult = analyzeGame(guesses, answer, hardMode);
-      setResult(analysisResult);
-      setAnalyzed(true);
-    } catch (err) {
-      toast({
-        title: "Analysis error",
-        description: "Something went wrong. Please check your inputs.",
-        variant: "destructive",
-      });
-    }
+    setIsAnalyzing(true);
+    // Use setTimeout to let the loading UI render before the heavy computation blocks the main thread
+    setTimeout(() => {
+      try {
+        const analysisResult = analyzeGame(guesses, answer, hardMode);
+        setResult(analysisResult);
+        setAnalyzed(true);
+      } catch (err) {
+        toast({
+          title: "Analysis error",
+          description: "Something went wrong. Please check your inputs.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsAnalyzing(false);
+      }
+    }, 50);
   }, [guessInputs, hardMode]);
 
   const handleClear = useCallback(() => {
@@ -190,6 +202,7 @@ export function WordleAnalyzer() {
     setFocusedRow(0);
     setAnalyzed(false);
     setResult(null);
+    setIsAnalyzing(false);
   }, []);
 
   useEffect(() => {
@@ -265,11 +278,21 @@ export function WordleAnalyzer() {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <Button
               onClick={handleAnalyze}
-              className="flex-1 gap-2 bg-[#6aaa64] hover:bg-[#5a9a54] text-white font-semibold"
+              disabled={isAnalyzing}
+              className="flex-1 gap-2 bg-[#6aaa64] hover:bg-[#5a9a54] text-white font-semibold disabled:opacity-70"
               size="lg"
             >
-              <Search className="h-4 w-4" />
-              Analyze
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Search className="h-4 w-4" />
+                  Analyze
+                </>
+              )}
             </Button>
             <Button
               onClick={handleClear}

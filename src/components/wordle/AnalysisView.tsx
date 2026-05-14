@@ -81,7 +81,7 @@ function SkillLuckCard({ skillBreakdown, solvedIn }: { skillBreakdown: SkillBrea
             <Badge className="mt-1 text-[10px]" variant="outline">{skillBreakdown.skillLabel}</Badge>
           </div>
           <div className="text-center p-3 rounded-lg bg-muted/50">
-            <div className={`text-3xl font-bold ${getSkillColor(100 - skillBreakdown.luckScore + 50)}`}>
+            <div className={`text-3xl font-bold ${getSkillColor(skillBreakdown.luckScore)}`}>
               {skillBreakdown.luckScore}
             </div>
             <div className="text-xs text-muted-foreground mt-1">Luck Factor</div>
@@ -183,6 +183,10 @@ function DifficultyCard({ difficulty, answer }: { difficulty: DifficultyMetrics;
             <div className="font-semibold">{difficulty.duplicateRisk}/100</div>
           </div>
           <div className="p-2 rounded bg-muted/50 text-center">
+            <div className="text-muted-foreground">Common Pattern</div>
+            <div className="font-semibold">{difficulty.commonPattern}/100</div>
+          </div>
+          <div className="p-2 rounded bg-muted/50 text-center col-span-2">
             <div className="text-muted-foreground">Info Entropy</div>
             <div className="font-semibold">{difficulty.infoEntropy}/100</div>
           </div>
@@ -269,7 +273,7 @@ function PillarsOfDoomCard({ pillars }: { pillars: PillarOfDoom[] }) {
 }
 
 // ============ SOLVER COMPARISON ============
-function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMethod[]; playerGuesses: number }) {
+function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMethod[]; playerGuesses: number | string }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -282,7 +286,7 @@ function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMetho
           <div className="flex items-center gap-2">
             <Swords className="h-5 w-5 text-purple-500" />
             <CardTitle className="text-base sm:text-lg">5-Method Solver Comparison</CardTitle>
-            <Badge className="bg-[#c9b458]/20 text-[#c9b458] border-[#c9b458]/30 text-[9px] font-bold">PRO</Badge>
+            
           </div>
           {expanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </div>
@@ -302,7 +306,7 @@ function SolverComparisonCard({ methods, playerGuesses }: { methods: SolverMetho
                 <div className="text-sm font-medium">Your Play</div>
                 <div className="text-[10px] text-muted-foreground">Actual gameplay</div>
               </div>
-              <div className="text-lg font-bold">{playerGuesses}/6</div>
+              <div className="text-lg font-bold">{playerGuesses === "X" ? <span className="text-red-500">X/6</span> : `${playerGuesses}/6`}</div>
             </div>
             {/* Solver rows */}
             {methods.map((method, i) => (
@@ -637,11 +641,11 @@ function ShareSection({ result, solvedIn }: { result: AnalysisResult; solvedIn: 
 
   const shareText = () => {
     const emojiMap = { correct: '\u{1F7E9}', present: '\u{1F7E8}', absent: '\u2B1B' };
-    let text = `Wordle Analyzer Pro ${solvedIn || 'X'}/6${result.hardMode ? '*' : ''}\n\n`;
+    let text = `Wordle Analyzer ${solvedIn || 'X'}/6${result.hardMode ? '*' : ''}\n\n`;
     result.turns.forEach((turn) => {
       text += turn.clue.map((c) => emojiMap[c.color]).join('') + '\n';
     });
-    text += '\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n';
+    if (result.solved) text += '\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n';
     text += `\nSkill: ${result.skillBreakdown.skillScore} | Luck: ${result.skillBreakdown.luckScore}`;
     text += `\nDifficulty: ${result.difficulty.label} (${result.difficulty.overall}/100)`;
     return text.trim();
@@ -721,20 +725,16 @@ function ShareSection({ result, solvedIn }: { result: AnalysisResult; solvedIn: 
 
 // ============ MAIN ANALYSIS VIEW ============
 export function AnalysisView({ result, onNewAnalysis }: AnalysisViewProps) {
-  const lastTurn = result.turns[result.turns.length - 1];
   const totalGuesses = result.totalGuesses || (result.turns.length + 1);
-  // Handle edge case: if turns is empty but the answer was found (e.g., guessed correctly on first try)
-  // Also handle normal case: if the last turn left <=1 remaining, the answer was found
-  const solvedInLastTurn = result.turns.length === 0
-    ? 1 // First guess was the answer
-    : (lastTurn && lastTurn.remainingAfter <= 1 ? result.turns.length + 1 : null);
+  // Use the solved field from the analysis result to properly determine guess count
+  const solvedInLastTurn = result.solved ? result.totalGuesses : null;
 
   return (
     <div className="space-y-4 sm:space-y-6 max-w-3xl sm:max-w-4xl mx-auto">
       {/* Summary */}
       <Card className="border-[#6aaa64]/30 bg-gradient-to-r from-[#6aaa64]/5 to-transparent">
         <CardContent className="pt-5 sm:pt-6 text-center px-4 sm:px-6">
-          <h3 className="text-xl sm:text-2xl font-bold mb-1">Your play: {solvedInLastTurn || 'X'}/6 <Badge className="bg-[#c9b458] text-white text-xs font-bold ml-1">PRO</Badge></h3>
+          <h3 className="text-xl sm:text-2xl font-bold mb-1">Your play: {solvedInLastTurn || 'X'}/6</h3>
           <p className="text-sm sm:text-base text-muted-foreground">
             {solvedInLastTurn
               ? `Solved in ${solvedInLastTurn} guess${solvedInLastTurn > 1 ? 'es' : ''}!`
@@ -833,7 +833,7 @@ export function AnalysisView({ result, onNewAnalysis }: AnalysisViewProps) {
       <AIPlaythroughSection playthrough={result.aiPlaythrough} />
 
       {/* Solver Comparison */}
-      <SolverComparisonCard methods={result.solverComparison} playerGuesses={solvedInLastTurn || totalGuesses} />
+      <SolverComparisonCard methods={result.solverComparison} playerGuesses={solvedInLastTurn || "X"} />
 
       {/* Share */}
       <ShareSection result={result} solvedIn={solvedInLastTurn || 'X'} />

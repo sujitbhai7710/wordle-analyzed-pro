@@ -1259,10 +1259,14 @@ export function analyzeGame(
   // NEW: Encoded state for shareable URL
   const encodedState = encodeGameState(guesses, answer, hardMode);
 
+  // Check if the user solved the puzzle (answer was among the guesses)
+  const solved = guesses.some(g => g.toUpperCase() === answerUpper);
+
   return {
     turns,
     aiPlaythrough,
     totalGuesses: guesses.length,
+    solved,
     hardMode,
     answer: answerUpper,
     skillBreakdown,

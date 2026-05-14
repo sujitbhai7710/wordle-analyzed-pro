@@ -4,9 +4,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { blogPosts } from '@/lib/blog/posts';
 
 export const metadata: Metadata = {
-  title: 'Wordle Analyzer Pro - Skill & Luck Scoring, Difficulty Scorecard, Solver Comparison',
+  title: 'Wordle Analyzer - Skill & Luck Scoring, Difficulty Scorecard, Solver Comparison',
   description:
-    'Analyze your Wordle gameplay with Pro features: Skill & Luck scoring, Difficulty Scorecard, 5-Method Solver Comparison, Pillars of Doom analysis, and shareable results. Free Wordle analyzer tool trusted by 25,000+ players. All analysis runs locally in your browser.',
+    'Analyze your Wordle gameplay with advanced features: Skill & Luck scoring, Difficulty Scorecard, 5-Method Solver Comparison, Pillars of Doom analysis, and shareable results. Free Wordle analyzer tool trusted by 25,000+ players. All analysis runs locally in your browser.',
   alternates: {
     canonical: 'https://wordle-analyzed-pro.pages.dev',
   },
@@ -39,7 +39,7 @@ const faqItems = [
   },
   {
     question: 'Can I use the analyzer for any Wordle game?',
-    answer: 'Yes! You can use the Wordle Analyzer for any completed Wordle game. Simply enter your guesses, set the tile colors by clicking to cycle through gray/yellow/green, enter the answer word, and click Analyze. The tool works with the NYT Wordle, Wordle clones, and any game that follows the standard Wordle rules.',
+    answer: 'Yes! You can use the Wordle Analyzer for any completed Wordle game. Simply enter your guesses in the grid, type the answer word in the last row, and click Analyze. The tool automatically calculates all tile colors based on the answer — no manual color setting needed. It works with the NYT Wordle, Wordle clones, and any game that follows the standard Wordle rules.',
   },
   {
     question: 'How accurate is the analysis?',
@@ -63,7 +63,7 @@ export default function HomePage() {
     '@type': 'WebApplication',
     name: 'Wordle Analyzer',
     description: 'Analyze your Wordle gameplay with data-driven insights. Discover your luck rating, guess quality, and AI-recommended optimal plays.',
-    url: 'https://wordleanalyzer.dev',
+    url: 'https://wordle-analyzed-pro.pages.dev',
     applicationCategory: 'GameApplication',
     operatingSystem: 'All',
     offers: {
@@ -74,7 +74,7 @@ export default function HomePage() {
     author: {
       '@type': 'Person',
       name: 'Alex Mitchell',
-      url: 'https://wordleanalyzer.dev/about',
+      url: 'https://wordle-analyzed-pro.pages.dev/about',
     },
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
     softwareVersion: '2.0',
@@ -84,8 +84,8 @@ export default function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Wordle Analyzer',
-    url: 'https://wordleanalyzer.dev',
-    description: 'Free Wordle analysis tool and strategy resource, trusted by 10,000+ players worldwide.',
+    url: 'https://wordle-analyzed-pro.pages.dev',
+    description: 'Free Wordle analysis tool and strategy resource, trusted by 25,000+ players worldwide.',
     founder: {
       '@type': 'Person',
       name: 'Alex Mitchell',

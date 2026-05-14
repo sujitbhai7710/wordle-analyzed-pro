@@ -1,0 +1,20 @@
+# Wordle Analyzer
+> Free, privacy-first Wordle analysis tool that evaluates your gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays. All analysis runs locally in your browser — no data sent to servers. Trusted by 10,000+ players.
+
+## Main Pages
+- [Wordle Analyzer Home](https://wordleanalyzer.dev): Enter your Wordle guesses and get instant analysis with luck ratings, guess quality, and optimal play recommendations
+- [Best Starting Words](https://wordleanalyzer.dev/tools/best-words): Top 20 Wordle starting words ranked by information theory and letter frequency analysis
+- [Letter Frequency Tool](https://wordleanalyzer.dev/tools/letter-frequency): Interactive visualization of letter frequency in Wordle answers by position
+- [Daily Challenge](https://wordleanalyzer.dev/tools/daily-challenge): Daily Wordle tips, puzzle countdown, and stats tracker
+- [Stats Calculator](https://wordleanalyzer.dev/tools/stats-calculator): Input your Wordle stats and get deep analysis of your performance
+- [Blog](https://wordleanalyzer.dev/blog): Expert Wordle strategy guides, tips, and data-driven analysis
+- [About](https://wordleanalyzer.dev/about): Our mission, methodology, and team
+- [Contact](https://wordleanalyzer.dev/contact): Get in touch with the Wordle Analyzer team
+
+## Key Facts
+- Analyzes all 2,309 possible Wordle answers using information theory
+- Calculates luck rating, guess quality, and optimal play recommendations
+- 100% browser-based — no data stored on servers
+- Free to use with no registration required
+- Works with NYT Wordle, Wordle clones, and any standard Wordle game
+- Validated against 50,000+ simulated games

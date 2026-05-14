@@ -9,6 +9,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://wordleanalyzer.dev/tools/stats-calculator',
   },
+  openGraph: {
+    title: 'Wordle Statistics Calculator - Analyze Your Performance',
+    description:
+      'Input your Wordle stats and get deep analysis: average guesses, consistency score, improvement trend, and personalized tips.',
+    url: 'https://wordleanalyzer.dev/tools/stats-calculator',
+    type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Wordle Statistics Calculator - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wordle Statistics Calculator - Analyze Your Performance',
+    description: 'Input your Wordle stats and get deep analysis with personalized improvement tips.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
+  },
 };
 
 export default function StatsCalculatorPage() {
@@ -20,22 +42,42 @@ export default function StatsCalculatorPage() {
     url: 'https://wordleanalyzer.dev/tools/stats-calculator',
     applicationCategory: 'GameApplication',
     operatingSystem: 'All',
+    author: {
+      '@type': 'Person',
+      name: 'Dwayne K. Richardson',
+      url: 'https://wordleanalyzer.dev/about',
+    },
   };
 
-  const softwareSchema = {
+  const breadcrumbSchema = {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Wordle Stats Analyzer',
-    applicationCategory: 'GameApplication',
-    operatingSystem: 'All',
-    description: 'Calculate derived Wordle statistics including average guesses, consistency scores, and improvement trends.',
-    url: 'https://wordleanalyzer.dev/tools/stats-calculator',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://wordleanalyzer.dev',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Tools',
+        item: 'https://wordleanalyzer.dev/tools',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Stats Calculator',
+        item: 'https://wordleanalyzer.dev/tools/stats-calculator',
+      },
+    ],
   };
 
   return (
     <>
       <JsonLd data={webAppSchema} />
-      <JsonLd data={softwareSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <StatsCalculatorPageClient />
     </>
   );

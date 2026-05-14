@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -18,10 +18,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1a2e" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://wordleanalyzer.dev"),
   title: {
-    default: "Wordle Analyzer- your free wordlebot",
+    default: "Wordle Analyzer — Your Free Wordlebot",
     template: "%s | Wordle Analyzer",
   },
   description:
@@ -47,26 +57,40 @@ export const metadata: Metadata = {
   creator: "Dwayne K. Richardson",
   publisher: "Wordle Analyzer",
   icons: {
-    icon: "/logo.svg",
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
+  manifest: "/manifest.json",
   alternates: {
     canonical: "https://wordleanalyzer.dev",
   },
   openGraph: {
-    title: "Wordle Analyzer- your free wordlebot",
+    title: "Wordle Analyzer — Your Free Wordlebot",
     description:
-      "Wordle Analyzer is your free wordlebot for analyzing Wordle gameplay. Discover your luck rating, guess quality, and AI-recommended optimal plays.",
+      "Analyze your Wordle gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays. Free, private, and runs entirely in your browser.",
     url: "https://wordleanalyzer.dev",
     siteName: "Wordle Analyzer",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "https://wordleanalyzer.dev/og-image.png",
+        width: 1152,
+        height: 864,
+        alt: "Wordle Analyzer — Free Wordle Analysis Tool",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wordle Analyzer- your free wordlebot",
+    title: "Wordle Analyzer — Your Free Wordlebot",
     description:
-      "Wordle Analyzer is your free wordlebot for analyzing Wordle gameplay. Discover your luck rating, guess quality, and AI-recommended optimal plays.",
+      "Analyze your Wordle gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays.",
     creator: "@wordleanalyzer",
+    images: ["https://wordleanalyzer.dev/og-image.png"],
   },
   robots: {
     index: true,
@@ -78,9 +102,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  verification: {
-    google: "google-site-verification-code",
   },
   category: "Games",
 };
@@ -105,14 +126,8 @@ const websiteSchema = {
   url: "https://wordleanalyzer.dev",
   description:
     "Free Wordle analysis tool that evaluates your gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays.",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://wordleanalyzer.dev/?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
+  // SearchAction removed: site does not implement search functionality.
+  // Adding a non-functional SearchAction is a schema violation per Google guidelines.
 };
 
 export default function RootLayout({

@@ -14,6 +14,21 @@ export const metadata: Metadata = {
       'Privacy Policy for Wordle Analyzer. All analysis runs locally in your browser — no game data is stored on our servers.',
     url: 'https://wordleanalyzer.dev/privacy',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Privacy Policy - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy Policy - Wordle Analyzer',
+    description: 'Privacy Policy for Wordle Analyzer. All analysis runs locally in your browser.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 

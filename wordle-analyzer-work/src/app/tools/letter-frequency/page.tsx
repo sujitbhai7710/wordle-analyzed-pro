@@ -15,6 +15,22 @@ export const metadata: Metadata = {
       'Explore letter frequency in Wordle answers with interactive charts. See which letters appear most often and in which positions.',
     url: 'https://wordleanalyzer.dev/tools/letter-frequency',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Letter Frequency in Wordle - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Letter Frequency in Wordle - Interactive Visualization',
+    description:
+      'Explore letter frequency in Wordle answers with interactive charts.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 
@@ -29,7 +45,7 @@ export default function LetterFrequencyPage() {
     operatingSystem: 'All',
     author: {
       '@type': 'Person',
-      name: 'Alex Mitchell',
+      name: 'Dwayne K. Richardson',
       url: 'https://wordleanalyzer.dev/about',
     },
   };

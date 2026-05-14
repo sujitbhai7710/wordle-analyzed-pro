@@ -15,6 +15,21 @@ export const metadata: Metadata = {
       'Get in touch with the Wordle Analyzer team. Send us feedback, questions, or suggestions.',
     url: 'https://wordleanalyzer.dev/contact',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Contact Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact Us - Wordle Analyzer',
+    description: 'Get in touch with the Wordle Analyzer team.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 

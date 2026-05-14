@@ -15,6 +15,21 @@ export const metadata: Metadata = {
       'Expert Wordle strategy guides, tips, and analysis. Learn the best starting words, advanced strategies, and improve your Wordle game with data-driven insights.',
     url: 'https://wordleanalyzer.dev/blog',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Wordle Blog - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wordle Blog - Strategy Tips, Guides & Analysis',
+    description: 'Expert Wordle strategy guides, tips, and data-driven analysis.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 
@@ -27,7 +42,7 @@ export default function BlogPage() {
     url: 'https://wordleanalyzer.dev/blog',
     author: {
       '@type': 'Person',
-      name: 'Alex Mitchell',
+      name: 'Dwayne K. Richardson',
       url: 'https://wordleanalyzer.dev/about',
     },
     publisher: {

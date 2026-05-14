@@ -15,6 +15,21 @@ export const metadata: Metadata = {
       'Learn about Wordle Analyzer, our rigorous data-driven methodology, and meet the team behind the tool.',
     url: 'https://wordleanalyzer.dev/about',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'About Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Wordle Analyzer - Our Mission, Methodology & Team',
+    description: 'Learn about Wordle Analyzer, our data-driven methodology, and meet the team.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 

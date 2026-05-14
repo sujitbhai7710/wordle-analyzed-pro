@@ -4,12 +4,37 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { blogPosts } from '@/lib/blog/posts';
 
 export const metadata: Metadata = {
-  title: 'Wordle Analyzer- your free wordlebot',
+  title: 'Wordle Analyzer — Your Free Wordlebot',
   description:
     'Wordle Analyzer is your free wordlebot for analyzing Wordle gameplay. Discover your luck rating, guess quality, and AI-recommended optimal plays with our Wordle Analyzer wordlebot tool. Trusted by 10,000+ players. All analysis runs locally in your browser.',
   keywords: ['Wordle Analyzer', 'wordlebot', 'free wordlebot', 'Wordle analysis', 'Wordle solver', 'Wordle strategy'],
   alternates: {
     canonical: 'https://wordleanalyzer.dev',
+  },
+  openGraph: {
+    title: 'Wordle Analyzer — Your Free Wordlebot',
+    description:
+      'Analyze your Wordle gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays. Free, private, and runs entirely in your browser.',
+    url: 'https://wordleanalyzer.dev',
+    siteName: 'Wordle Analyzer',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Wordle Analyzer — Free Wordle Analysis Tool',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wordle Analyzer — Your Free Wordlebot',
+    description:
+      'Analyze your Wordle gameplay with luck ratings, guess quality scores, and AI-recommended optimal plays.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
+    creator: '@wordleanalyzer',
   },
 };
 
@@ -74,7 +99,7 @@ export default function HomePage() {
     },
     author: {
       '@type': 'Person',
-      name: 'Alex Mitchell',
+      name: 'Dwayne K. Richardson',
       url: 'https://wordleanalyzer.dev/about',
     },
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
@@ -89,29 +114,18 @@ export default function HomePage() {
     description: 'Free Wordle analysis tool and strategy resource, trusted by 10,000+ players worldwide.',
     founder: {
       '@type': 'Person',
-      name: 'Alex Mitchell',
-      jobTitle: 'Data Analyst & Founder',
+      name: 'Dwayne K. Richardson',
+      jobTitle: 'Puzzle Analyst & Founder',
     },
   };
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer,
-      },
-    })),
-  };
+  // FAQ schema removed: FAQPage rich results restricted to gov/healthcare sites only (Aug 2023).
+  // FAQ content is still rendered for user experience and AI citation value.
 
   return (
     <>
       <JsonLd data={webAppSchema} />
       <JsonLd data={orgSchema} />
-      <JsonLd data={faqSchema} />
       <WordleAnalyzerPage recentPosts={recentPosts} faqItems={faqItems} />
     </>
   );

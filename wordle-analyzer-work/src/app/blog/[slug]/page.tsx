@@ -34,11 +34,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'Wordle Analyzer',
       section: post.category,
       tags: post.tags,
+      images: [
+        {
+          url: 'https://wordleanalyzer.dev/og-image.png',
+          width: 1152,
+          height: 864,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: ['https://wordleanalyzer.dev/og-image.png'],
     },
   };
 }
@@ -83,6 +92,7 @@ export default async function BlogPostPage({ params }: Props) {
     keywords: post.tags.join(', '),
     wordCount: post.content.split(/\s+/).length,
     inLanguage: 'en',
+    image: 'https://wordleanalyzer.dev/og-image.png',
   };
 
   const breadcrumbSchema = {

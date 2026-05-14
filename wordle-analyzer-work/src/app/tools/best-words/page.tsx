@@ -15,6 +15,22 @@ export const metadata: Metadata = {
       'Discover the top 20 best Wordle starting words ranked by information theory and letter frequency analysis.',
     url: 'https://wordleanalyzer.dev/tools/best-words',
     type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Best Wordle Starting Words - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Best Wordle Starting Words - Ranked by Information Theory',
+    description:
+      'Discover the top 20 best Wordle starting words ranked by information theory and letter frequency analysis.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
   },
 };
 
@@ -29,34 +45,12 @@ export default function BestWordsPage() {
     operatingSystem: 'All',
     author: {
       '@type': 'Person',
-      name: 'Alex Mitchell',
+      name: 'Dwayne K. Richardson',
       url: 'https://wordleanalyzer.dev/about',
     },
   };
 
-  const howToSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: 'How to Choose the Best Wordle Starting Word',
-    description: 'A guide to selecting optimal starting words in Wordle based on information theory and letter frequency.',
-    step: [
-      {
-        '@type': 'HowToStep',
-        name: 'Understand Letter Frequency',
-        text: 'The most common letters in Wordle answers are E, A, R, O, T, L, I, S, N. Starting words that use these letters give you the most information.',
-      },
-      {
-        '@type': 'HowToStep',
-        name: 'Choose a Word with Common Letters',
-        text: 'Select a starting word like SLATE, CRANE, or TRACE that combines multiple high-frequency letters in common positions.',
-      },
-      {
-        '@type': 'HowToStep',
-        name: 'Test Multiple Vowels',
-        text: 'Good starting words test at least two vowels (A, E, I, O) since most Wordle answers contain 2-3 vowels.',
-      },
-    ],
-  };
+  // HowTo schema removed: rich results deprecated September 2023 per Google guidelines.
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -86,7 +80,6 @@ export default function BestWordsPage() {
   return (
     <>
       <JsonLd data={schema} />
-      <JsonLd data={howToSchema} />
       <JsonLd data={breadcrumbSchema} />
       <BestWordsPageClient />
     </>

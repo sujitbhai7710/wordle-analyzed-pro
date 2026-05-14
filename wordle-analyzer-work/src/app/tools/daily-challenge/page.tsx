@@ -9,6 +9,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://wordleanalyzer.dev/tools/daily-challenge',
   },
+  openGraph: {
+    title: 'Daily Wordle Challenge - Tips, Stats & Countdown',
+    description:
+      'Get your daily Wordle tip, find today\'s Wordle number, and countdown to the next puzzle.',
+    url: 'https://wordleanalyzer.dev/tools/daily-challenge',
+    type: 'website',
+    siteName: 'Wordle Analyzer',
+    images: [
+      {
+        url: 'https://wordleanalyzer.dev/og-image.png',
+        width: 1152,
+        height: 864,
+        alt: 'Daily Wordle Challenge - Wordle Analyzer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Daily Wordle Challenge - Tips, Stats & Countdown',
+    description: 'Get your daily Wordle tip and countdown to the next puzzle.',
+    images: ['https://wordleanalyzer.dev/og-image.png'],
+  },
 };
 
 export default function DailyChallengePage() {
@@ -20,22 +42,42 @@ export default function DailyChallengePage() {
     url: 'https://wordleanalyzer.dev/tools/daily-challenge',
     applicationCategory: 'GameApplication',
     operatingSystem: 'All',
+    author: {
+      '@type': 'Person',
+      name: 'Dwayne K. Richardson',
+      url: 'https://wordleanalyzer.dev/about',
+    },
   };
 
-  const softwareSchema = {
+  const breadcrumbSchema = {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Wordle Daily Challenge Tracker',
-    applicationCategory: 'GameApplication',
-    operatingSystem: 'All',
-    description: 'Track daily Wordle challenges with tips, countdowns, and social sharing.',
-    url: 'https://wordleanalyzer.dev/tools/daily-challenge',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://wordleanalyzer.dev',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Tools',
+        item: 'https://wordleanalyzer.dev/tools',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Daily Challenge',
+        item: 'https://wordleanalyzer.dev/tools/daily-challenge',
+      },
+    ],
   };
 
   return (
     <>
       <JsonLd data={webAppSchema} />
-      <JsonLd data={softwareSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <DailyChallengePageClient />
     </>
   );

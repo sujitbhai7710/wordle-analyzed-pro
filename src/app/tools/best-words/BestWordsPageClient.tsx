@@ -66,8 +66,7 @@ export function BestWordsPageClient() {
         <div className="flex items-center justify-center gap-2 mb-3">
           <Crown className="h-6 w-6 text-[#c9b458]" />
           <h1 className="text-3xl sm:text-4xl font-bold">
-            Best Starting <span className="text-[#6aaa64]">Words</span>{' '}
-            <span className="text-[#c9b458]">Pro</span>
+            Best Starting <span className="text-[#6aaa64]">Words</span>
           </h1>
         </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -251,9 +250,9 @@ export function BestWordsPageClient() {
         viewport={{ once: true }}
         className="mt-12 p-6 rounded-xl bg-muted/50 border"
       >
-        <h2 className="text-xl font-bold mb-3">How We Rank Starting Words (Pro)</h2>
+        <h2 className="text-xl font-bold mb-3">How We Rank Starting Words</h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-          Our Pro rankings use five complementary metrics to give you a complete picture of each starting word&apos;s strength. The <strong>Entropy Score</strong> measures how much information a word reveals on average — higher entropy means the word creates more balanced partitions of the solution space. <strong>Letter Coverage</strong> scores how many of the top-10 most common Wordle letters a word contains. <strong>Positional Score</strong> evaluates how well the letters align with their most common positions in Wordle answers.
+          Our rankings use five complementary metrics to give you a complete picture of each starting word&apos;s strength. The <strong>Entropy Score</strong> measures how much information a word reveals on average — higher entropy means the word creates more balanced partitions of the solution space. <strong>Letter Coverage</strong> scores how many of the top-10 most common Wordle letters a word contains. <strong>Positional Score</strong> evaluates how well the letters align with their most common positions in Wordle answers.
         </p>
         <p className="text-sm text-muted-foreground leading-relaxed mb-3">
           We also provide <strong>Average Remaining</strong> (how many words are left after the average first guess), <strong>Best Case</strong> and <strong>Worst Case</strong> remaining counts, and an approximate <strong>Solve Rate in 3</strong> guesses. The overall rank is a weighted combination: 40% Entropy, 20% Letter Coverage, 20% Positional Score, and 20% Average Remaining.

@@ -21,14 +21,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://wordleanalyzer.dev"),
   title: {
-    default: "Wordle Analyzer Pro - Skill & Luck Scoring, Difficulty Scorecard, Solver Comparison",
-    template: "%s | Wordle Analyzer Pro",
+    default: "Wordle Analyzer - Skill & Luck Scoring, Difficulty Scorecard, Solver Comparison",
+    template: "%s | Wordle Analyzer",
   },
   description:
-    "Analyze your Wordle gameplay with Pro features: Skill & Luck scoring, Game Difficulty scorecard, 5-Method Solver Comparison, Pillars of Doom analysis, Unused Clue Detection, and shareable analysis URLs. Free Wordle analyzer tool.",
+    "Analyze your Wordle gameplay with Skill & Luck scoring, Game Difficulty scorecard, 5-Method Solver Comparison, Pillars of Doom analysis, Unused Clue Detection, and shareable analysis URLs. Free Wordle analyzer tool.",
   keywords: [
     "Wordle analyzer",
-    "Wordle analyzer pro",
+    "Wordle analyzer",
     "Wordle analysis",
     "Wordle solver",
     "Wordle strategy",
@@ -55,19 +55,19 @@ export const metadata: Metadata = {
     canonical: "https://wordleanalyzer.dev",
   },
   openGraph: {
-    title: "Wordle Analyzer Pro - Skill & Luck Scoring, Difficulty Scorecard",
+    title: "Wordle Analyzer - Skill & Luck Scoring, Difficulty Scorecard",
     description:
-      "Analyze your Wordle gameplay with Pro features: Skill & Luck scoring, Difficulty scorecard, 5-Method Solver Comparison, and more.",
+      "Analyze your Wordle gameplay with Skill & Luck scoring, Difficulty scorecard, 5-Method Solver Comparison, and more.",
     url: "https://wordleanalyzer.dev",
-    siteName: "Wordle Analyzer Pro",
+    siteName: "Wordle Analyzer",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wordle Analyzer Pro - Skill & Luck Scoring, Difficulty Scorecard",
+    title: "Wordle Analyzer - Skill & Luck Scoring, Difficulty Scorecard",
     description:
-      "Analyze your Wordle gameplay with Pro features: Skill & Luck scoring, Difficulty scorecard, 5-Method Solver Comparison, and more.",
+      "Analyze your Wordle gameplay with Skill & Luck scoring, Difficulty scorecard, 5-Method Solver Comparison, and more.",
     creator: "@wordleanalyzer",
   },
   robots: {
@@ -103,10 +103,10 @@ const breadcrumbSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Wordle Analyzer Pro",
+  name: "Wordle Analyzer",
   url: "https://wordleanalyzer.dev",
   description:
-    "Free Wordle analysis tool with Pro features: Skill & Luck scoring, Difficulty scorecard, Solver Comparison, Unused Clue Detection, and shareable analysis URLs.",
+    "Free Wordle analysis tool with Skill & Luck scoring, Difficulty scorecard, Solver Comparison, Unused Clue Detection, and shareable analysis URLs.",
   potentialAction: {
     "@type": "SearchAction",
     target: {

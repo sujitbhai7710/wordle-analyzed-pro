@@ -1259,13 +1259,22 @@ export function analyzeGame(
   // NEW: Encoded state for shareable URL
   const encodedState = encodeGameState(guesses, answer, hardMode);
 
-  // Check if the user solved the puzzle (answer was among the guesses)
-  const solved = guesses.some(g => g.toUpperCase() === answerUpper);
+  // Determine if the user solved the puzzle and the total number of guesses.
+  // The answer is always provided in a separate row (last row in the UI).
+  // If any guess equals the answer, the user solved it at that guess.
+  // Otherwise, the user solved it on the guess AFTER the last wrong one (the answer row),
+  // so totalGuesses = wrong guesses + 1 correct guess.
+  // If the user used all 6 guesses without finding the answer, they didn't solve it.
+  const solvedInGuesses = guesses.some(g => g.toUpperCase() === answerUpper);
+  const solved = solvedInGuesses || guesses.length < 6;
+  const totalGuesses = solvedInGuesses
+    ? guesses.findIndex(g => g.toUpperCase() === answerUpper) + 1
+    : (solved ? guesses.length + 1 : 6);
 
   return {
     turns,
     aiPlaythrough,
-    totalGuesses: guesses.length,
+    totalGuesses,
     solved,
     hardMode,
     answer: answerUpper,
